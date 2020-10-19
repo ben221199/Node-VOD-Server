@@ -26,32 +26,33 @@ const context = require('./node_core_ctx');
 
 
 
-class NodeHttpServer {
+class NodeHttpServer{
 	
-  constructor(config) {
-    this.port = config.http.port || HTTP_PORT;
-    this.mediaroot = config.http.mediaroot || HTTP_MEDIAROOT;
-    this.config = config;
-
-    let app = Express();
-    app.use(bodyParser.json());
-
-    app.use(bodyParser.urlencoded({ extended: true }));
-
-    app.all('*', (req, res, next) => {
-      res.header("Access-Control-Allow-Origin", this.config.http.allow_origin);
-      res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-      res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-      res.header("Access-Control-Allow-Credentials", true);
-      req.method === "OPTIONS" ? res.sendStatus(200) : next();
-    });
+	constructor(config){
+		this.port = config.http.port || HTTP_PORT;
+		this.mediaroot = config.http.mediaroot || HTTP_MEDIAROOT;
+		this.config = config;
+		
+		let app = Express();
+		app.use(bodyParser.json());
+		
+		app.use(bodyParser.urlencoded({ extended: true }));
+		
+		app.all('*', (req, res, next) => {
+			res.header("Access-Control-Allow-Origin",	this.config.http.allow_origin);
+			res.header("Access-Control-Allow-Headers",	['Accept','Authorization','Content-Length','Content-Type','Upgrade','X-Requested-With'].join(','));
+			res.header("Access-Control-Allow-Methods",	['GET','DELETE','OPTIONS','POST','PUT'].join(','));
+			res.header("Access-Control-Allow-Credentials",	true);
+			
+			req.method === "OPTIONS" ? res.sendStatus(200) : next();
+		});
     
 	app.get('*.mp4.m3u8',(req,res,next) => {
 		let mp4m3u8 = config.http.webroot+req.url;
 		let folder = 'fragments_'+path.basename(mp4m3u8);
 		console.log(mp4m3u8,folder);
 		res.header('Content-Type','application/vnd.apple.mpegurl');
-		res.send('#EXTM3U\r\n#EXT-X-VERSION:3\r\n./'+folder+'/index.m3u8\r\n');
+		res.send('#EXTM3U\r\n#EXT-X-VERSION:3\r\n#EXT-X-STREAM-INF:BANDWIDTH=2000000\r\n./'+folder+'/index.m3u8\r\n');
 	});
 
     //app.get('*.flv', (req, res, next) => {
