@@ -50,6 +50,7 @@ class NodeHttpServer {
 		let mp4m3u8 = config.http.webroot+req.url;
 		let folder = 'fragments_'+path.basename(mp4m3u8);
 		console.log(mp4m3u8,folder);
+		res.header('Content-Type','application/vnd.apple.mpegurl');
 		res.send('#EXTM3U\r\n#EXT-X-VERSION:3\r\n./'+folder+'/index.m3u8\r\n');
 	});
 
