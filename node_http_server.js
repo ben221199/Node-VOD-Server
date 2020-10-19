@@ -59,9 +59,8 @@ class NodeHttpServer{
 		console.log(inputFile,outputFolder);
 		
 		if(!Fs.existsSync(outputFolder)){
-			Fs.mkdir(outputFolder,(err) => {
-				console.log('ERROR');
-			});
+			Fs.mkdirSync(outputFolder);
+			
 			let cmd = spawn('/usr/bin/ffmpeg',['-i',inputFile,'-codec:copy','-f','hls',outputFolder+'index.m3u8']);
 			
 			cmd.on('error', (e) => {
