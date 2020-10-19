@@ -62,21 +62,21 @@ class NodeHttpServer{
 			Fs.mkdir(outputFolder,(err) => {
 				console.log('ERROR');
 			});
-			let cmd = spawn('ffmpeg',['-i',inputFile,'-codec:copy','-f','hls',outputFolder+'index.m3u8']);
+			let cmd = spawn('/usr/bin/ffmpeg',['-i',inputFile,'-codec:copy','-f','hls',outputFolder+'index.m3u8']);
 			
-			this.cmd.on('error', (e) => {
+			cmd.on('error', (e) => {
 				console.log('[ERROR]',e);
 			});
 
-			this.ffmpeg_exec.stdout.on('data', (data) => {
+			ffmpeg_exec.stdout.on('data', (data) => {
 				console.log('[STDOUT]',data);
 			});
 			
-			this.ffmpeg_exec.stderr.on('data', (data) => {
+			ffmpeg_exec.stderr.on('data', (data) => {
 				console.log('[STDERR]',data);
 			});
 			
-			this.ffmpeg_exec.stderr.on('close', (code) => {
+			ffmpeg_exec.stderr.on('close', (code) => {
 				console.log('[CLOSE]',code);
 			});
 		}
