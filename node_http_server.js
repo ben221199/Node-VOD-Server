@@ -19,7 +19,7 @@ const HTTPS_PORT = 443;
 const HTTP_MEDIAROOT = './media';
 const Logger = require('./node_core_logger');
 const context = require('./node_core_ctx');
-const { spawn } = require('child_process');
+const spawn = require('child_process').spawn;
 
 //const streamsRoute = require('./api/routes/streams');
 //const serverRoute = require('./api/routes/server');
@@ -68,15 +68,15 @@ class NodeHttpServer{
 				console.log('[ERROR]',e);
 			});
 
-			ffmpeg_exec.stdout.on('data', (data) => {
+			cmd.stdout.on('data', (data) => {
 				console.log('[STDOUT]',data);
 			});
 			
-			ffmpeg_exec.stderr.on('data', (data) => {
+			cmd.stderr.on('data', (data) => {
 				console.log('[STDERR]',data);
 			});
 			
-			ffmpeg_exec.stderr.on('close', (code) => {
+			cmd.stderr.on('close', (code) => {
 				console.log('[CLOSE]',code);
 			});
 		}
