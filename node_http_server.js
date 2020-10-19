@@ -68,11 +68,11 @@ class NodeHttpServer{
 			});
 
 			cmd.stdout.on('data', (data) => {
-				console.log('[STDOUT]',data);
+				console.log('[STDOUT]',data.toString());
 			});
 			
 			cmd.stderr.on('data', (data) => {
-				console.log('[STDERR]',data);
+				console.log('[STDERR]',data.toString());
 			});
 			
 			cmd.stderr.on('close', (code) => {
