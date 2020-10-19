@@ -61,7 +61,7 @@ class NodeHttpServer{
 		if(!Fs.existsSync(outputFolder)){
 			Fs.mkdirSync(outputFolder);
 			
-			let cmd = spawn('/usr/bin/ffmpeg',['-i',inputFile,'-codec:','copy','-f','hls',outputFolder+'index.m3u8']);
+			let cmd = spawn('/usr/bin/ffmpeg',['-i',inputFile,'-codec:','copy','-start_number','0','-hls_time','60','-hls_list_size','0','-f','hls',outputFolder+'index.m3u8']);
 			
 			cmd.on('error', (e) => {
 				console.log('[ERROR]',e);
