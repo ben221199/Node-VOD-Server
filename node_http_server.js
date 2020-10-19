@@ -19,6 +19,7 @@ const HTTPS_PORT = 443;
 const HTTP_MEDIAROOT = './media';
 const Logger = require('./node_core_logger');
 const context = require('./node_core_ctx');
+const { spawn } = require('child_process');
 
 //const streamsRoute = require('./api/routes/streams');
 //const serverRoute = require('./api/routes/server');
@@ -50,7 +51,20 @@ class NodeHttpServer{
 	app.get('*.mp4.m3u8',(req,res,next) => {
 		let mp4m3u8 = config.http.webroot+req.url;
 		let folder = 'fragments_'+path.basename(mp4m3u8);
-		console.log(mp4m3u8,folder);
+		let dirname = path.dirname(mp4m3u8);
+		
+		let inputFile = mp4m3u8.replace('.m3u8','');
+		let outputFolder = dirname+'/'+folder+'/';
+		
+		console.log(inputFile,outputFolder);
+		
+		if(!Fs.existsSync(outputFolder)){
+			Fs.mkdir(outputFolder,(err) => {
+				console.log('ERROR');
+			});
+			spawn('ffmpeg',['-i',inputFile,'-codec:copy','-f','hls',outputFolder+'index.m3u8']);
+		}
+		
 		res.header('Content-Type','application/vnd.apple.mpegurl');
 		res.send('#EXTM3U\r\n#EXT-X-VERSION:3\r\n#EXT-X-STREAM-INF:BANDWIDTH=2000000\r\n./'+folder+'/index.m3u8\r\n');
 	});
